@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="loginScreen" class="screen active">
+        <div class="container">
+            <div class="logo">
+                <img src="flow-logo.jpg" alt="Flow In English" class="logo-image">
+                <p>English Teaching Platform</p>
+            </div>
+            <div class="login-form" id="loginFormContainer">
+                <h2>Welcome Back</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="code">Code</label>
+                        <input type="password" id="code" name="code" required>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Enter
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="login.js"></script>
+</body>
+</html> 

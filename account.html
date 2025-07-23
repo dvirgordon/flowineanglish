@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow - Account Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="accountScreen" class="screen active">
+        <div class="header">
+            <div class="header-left">
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            <div class="header-center">
+                <img src="flow-logo.jpg" alt="Flow In English" class="header-logo">
+                <h1>Account Management</h1>
+            </div>
+            <div class="header-right">
+                <button id="backToDashboardBtn" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+        </div>
+        <div class="container">
+            <div class="account-tabs">
+                <button class="tab-btn active" data-tab="users">
+                    <i class="fas fa-users"></i> Manage Users
+                </button>
+                <button class="tab-btn" data-tab="classes">
+                    <i class="fas fa-calendar"></i> Manage Classes
+                </button>
+                <button class="tab-btn" data-tab="password">
+                    <i class="fas fa-key"></i> Change Password
+                </button>
+            </div>
+
+            <!-- Users Management Tab -->
+            <div id="usersTab" class="tab-content active">
+                <div class="tab-header">
+                    <h2><i class="fas fa-users"></i> User Management</h2>
+                    <div class="search-box">
+                        <input type="text" id="userSearch" placeholder="Search users...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="users-list" id="usersList">
+                    <!-- Users will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Classes Management Tab -->
+            <div id="classesTab" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-calendar"></i> Class Management</h2>
+                    <div class="search-box">
+                        <input type="text" id="classSearch" placeholder="Search classes...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="classes-list" id="classesList">
+                    <!-- Classes will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Password Change Tab -->
+            <div id="passwordTab" class="tab-content">
+                <div class="tab-header">
+                    <h2><i class="fas fa-key"></i> Change Password</h2>
+                </div>
+                <form id="changePasswordForm" class="password-form">
+                    <div class="input-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Change Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Edit User</h2>
+                <button id="closeEditUserModal" class="btn-icon">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="editUserForm">
+                <div class="input-group">
+                    <label for="editUsername">Username</label>
+                    <input type="text" id="editUsername" required>
+                </div>
+                <div class="input-group">
+                    <label for="editCode">Code</label>
+                    <input type="password" id="editCode" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="deleteUserBtn" class="btn-danger">
+                        <i class="fas fa-trash"></i> Delete User
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Class Modal -->
+    <div id="editClassModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Edit Class</h2>
+                <button id="closeEditClassModal" class="btn-icon">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="editClassForm">
+                <div class="input-group">
+                    <label for="editClassDate">Date</label>
+                    <input type="date" id="editClassDate" required>
+                </div>
+                <div class="input-group">
+                    <label for="editClassHour">Hour</label>
+                    <input type="time" id="editClassHour" required>
+                </div>
+                <div class="input-group">
+                    <label for="editClassTeacher">Teacher</label>
+                    <input type="text" id="editClassTeacher" required>
+                </div>
+                <div class="input-group">
+                    <label for="editClassLocation">Location</label>
+                    <input type="text" id="editClassLocation" required>
+                </div>
+                <div class="input-group">
+                    <label for="editClassName">Name</label>
+                    <input type="text" id="editClassName" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="deleteClassBtn" class="btn-danger">
+                        <i class="fas fa-trash"></i> Delete Class
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="account.js"></script>
+</body>
+</html> 

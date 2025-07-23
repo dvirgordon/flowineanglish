@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow - Add User</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="adduser-page">
+    <div id="addUserScreen" class="screen active">
+        <div class="header">
+            <div class="header-left">
+                <button id="logoutBtn" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            <div class="header-center">
+                <img src="flow-logo.jpg" alt="Flow In English" class="header-logo">
+                <h1>Add New User</h1>
+            </div>
+            <div class="header-right">
+                <button id="backToDashboardBtn" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+        </div>
+        <div class="container">
+            <!-- Step 1: User Information -->
+            <div id="userInfoStep" class="step active">
+                <h2><i class="fas fa-user"></i> User Information</h2>
+                <form id="addUserForm">
+                    <div class="input-group">
+                        <label for="newUsername">Username</label>
+                        <input type="text" id="newUsername" name="newUsername" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="newCode">Code</label>
+                        <input type="password" id="newCode" name="newCode" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="userRole">Role</label>
+                        <select id="userRole" name="userRole" required>
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-arrow-right"></i> Next: Add Classes
+                    </button>
+                </form>
+            </div>
+
+            <!-- Step 2: Calendar and Classes -->
+            <div id="calendarStep" class="step">
+                <div class="step-header">
+                    <h2><i class="fas fa-calendar"></i> Add Classes for <span id="newUserName"></span></h2>
+                    <p>Click on dates to add classes, then create the user</p>
+                </div>
+                
+                <div class="calendar-section">
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button id="prevMonth" class="btn-icon">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h3 id="currentMonth">January 2024</h3>
+                            <button id="nextMonth" class="btn-icon">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="calendar-days">
+                                <div>Sun</div>
+                                <div>Mon</div>
+                                <div>Tue</div>
+                                <div>Wed</div>
+                                <div>Thu</div>
+                                <div>Fri</div>
+                                <div>Sat</div>
+                            </div>
+                            <div id="calendarDates" class="calendar-dates"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="selected-classes-section">
+                    <h3><i class="fas fa-list"></i> Selected Classes</h3>
+                    <div id="selectedClasses" class="selected-classes-list">
+                        <p class="no-classes">No classes selected yet. Click on calendar dates to add classes.</p>
+                    </div>
+                </div>
+
+                <div class="step-actions">
+                    <button id="backToUserInfo" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to User Info
+                    </button>
+                    <button id="createUserBtn" class="btn-primary">
+                        <i class="fas fa-user-plus"></i> Create User with Classes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div id="addClassModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus"></i> Add Class for <span id="modalUserName"></span></h2>
+                <button id="closeModal" class="btn-icon">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addClassForm">
+                <div class="input-group">
+                    <label for="classDate">Date</label>
+                    <input type="date" id="classDate" name="classDate" required readonly>
+                </div>
+                <div class="input-group">
+                    <label for="classHour">Hour</label>
+                    <input type="time" id="classHour" name="classHour" required>
+                </div>
+                <div class="input-group">
+                    <label for="classTeacher">Teacher</label>
+                    <input type="text" id="classTeacher" name="classTeacher" required>
+                </div>
+                <div class="input-group">
+                    <label for="classLocation">Location</label>
+                    <input type="text" id="classLocation" name="classLocation" required>
+                </div>
+                <div class="input-group">
+                    <label for="className">Name</label>
+                    <input type="text" id="className" name="className" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancelClass" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Add Class
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="adduser.js"></script>
+</body>
+</html> 

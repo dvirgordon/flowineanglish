@@ -1,8 +1,9 @@
 // Login Page JavaScript
 class LoginPage {
     constructor() {
-        this.users = this.loadUsers();
+        this.users = [];
         this.bindEvents();
+        this.initializePage();
     }
 
     // Bind event listeners
@@ -14,13 +15,13 @@ class LoginPage {
     }
 
     // Handle user login
-    handleLogin() {
+    async handleLogin() {
         const username = document.getElementById('username').value;
         const code = document.getElementById('code').value;
 
         if (username === 'tamar' && code === '4378') {
             const user = { username: 'tamar', isAdmin: true, role: 'admin' };
-            localStorage.setItem('currentUser', JSON.stringify(user));
+            await window.cloudStorage.saveCurrentUser(user);
             window.location.href = 'dashboard.html';
         } else {
             const user = this.users.find(u => u.username === username && u.code === code);
@@ -29,7 +30,7 @@ class LoginPage {
                 if (!user.role) {
                     user.role = 'student'; // Default to student for existing users
                 }
-                localStorage.setItem('currentUser', JSON.stringify(user));
+                await window.cloudStorage.saveCurrentUser(user);
                 window.location.href = 'dashboard.html';
             } else {
                 this.showMessage('Invalid username or code. Please try again.', 'error');
@@ -62,14 +63,18 @@ class LoginPage {
         }, 5000);
     }
 
-    // Load users from localStorage
-    loadUsers() {
-        const users = localStorage.getItem('flowUsers');
-        return users ? JSON.parse(users) : [];
+    // Initialize page data
+    async initializePage() {
+        try {
+            this.users = await window.cloudStorage.loadUsers();
+        } catch (error) {
+            console.error('Error loading users:', error);
+            this.users = [];
+        }
     }
 }
 
 // Initialize the login page when the page loads
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     new LoginPage();
 }); 

@@ -4,23 +4,26 @@ class FlowApp {
         this.currentUser = null;
         this.currentDate = new Date();
         this.selectedDate = null;
-        this.users = this.loadUsers();
-        this.classes = this.loadClasses();
+        this.users = [];
+        this.classes = [];
         
         this.initializeApp();
         this.bindEvents();
     }
 
     // Initialize the app
-    initializeApp() {
+    async initializeApp() {
+        // Load data from Firebase
+        await this.loadDataFromCloud();
+        
         // Set current date for calendar
         this.updateCalendarHeader();
         this.renderCalendar();
         
         // Check if user is already logged in
-        const savedUser = localStorage.getItem('currentUser');
+        const savedUser = await window.cloudStorage.loadCurrentUser();
         if (savedUser) {
-            this.currentUser = JSON.parse(savedUser);
+            this.currentUser = savedUser;
             this.showMainDashboard();
         }
     }
@@ -91,14 +94,14 @@ class FlowApp {
     }
 
     // Handle user login
-    handleLogin() {
+    async handleLogin() {
         const username = document.getElementById('username').value;
         const code = document.getElementById('code').value;
 
         // Check if it's the admin (Tamar)
         if (username === 'tamar' && code === '4378') {
             this.currentUser = { username: 'tamar', isAdmin: true };
-            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+            await window.cloudStorage.saveCurrentUser(this.currentUser);
             this.showMainDashboard();
             this.showMessage('Welcome back, Tamar!', 'success');
         } else {
@@ -106,7 +109,7 @@ class FlowApp {
             const user = this.users.find(u => u.username === username && u.code === code);
             if (user) {
                 this.currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                await window.cloudStorage.saveCurrentUser(this.currentUser);
                 this.showMainDashboard();
                 this.showMessage(`Welcome back, ${user.username}!`, 'success');
             } else {
@@ -119,7 +122,7 @@ class FlowApp {
     }
 
     // Handle adding a new user
-    handleAddUser() {
+    async handleAddUser() {
         const username = document.getElementById('newUsername').value;
         const code = document.getElementById('newCode').value;
 
@@ -138,7 +141,7 @@ class FlowApp {
         };
 
         this.users.push(newUser);
-        this.saveUsers();
+        await this.saveUsers();
 
         this.showMessage(`User ${username} created successfully!`, 'success');
         document.getElementById('addUserForm').reset();
@@ -146,7 +149,7 @@ class FlowApp {
     }
 
     // Handle adding a new class
-    handleAddClass() {
+    async handleAddClass() {
         const date = document.getElementById('classDate').value;
         const hour = document.getElementById('classHour').value;
         const teacher = document.getElementById('classTeacher').value;
@@ -165,7 +168,7 @@ class FlowApp {
         };
 
         this.classes.push(newClass);
-        this.saveClasses();
+        await this.saveClasses();
 
         this.showMessage('Class added successfully!', 'success');
         document.getElementById('addClassForm').reset();
@@ -378,9 +381,9 @@ class FlowApp {
     }
 
     // Logout
-    logout() {
+    async logout() {
         this.currentUser = null;
-        localStorage.removeItem('currentUser');
+        await window.cloudStorage.removeCurrentUser();
         
         // Reset login form
         const loginForm = document.getElementById('loginFormContainer');
@@ -390,30 +393,30 @@ class FlowApp {
         this.showMessage('Logged out successfully!', 'success');
     }
 
-    // Load users from localStorage
-    loadUsers() {
-        const users = localStorage.getItem('flowUsers');
-        return users ? JSON.parse(users) : [];
+    // Load data from Firebase
+    async loadDataFromCloud() {
+        try {
+            this.users = await window.cloudStorage.loadUsers();
+            this.classes = await window.cloudStorage.loadClasses();
+        } catch (error) {
+            console.error('Error loading data from cloud:', error);
+            this.users = [];
+            this.classes = [];
+        }
     }
 
-    // Save users to localStorage
-    saveUsers() {
-        localStorage.setItem('flowUsers', JSON.stringify(this.users));
+    // Save users to Firebase
+    async saveUsers() {
+        await window.cloudStorage.saveUsers(this.users);
     }
 
-    // Load classes from localStorage
-    loadClasses() {
-        const classes = localStorage.getItem('flowClasses');
-        return classes ? JSON.parse(classes) : [];
-    }
-
-    // Save classes to localStorage
-    saveClasses() {
-        localStorage.setItem('flowClasses', JSON.stringify(this.classes));
+    // Save classes to Firebase
+    async saveClasses() {
+        await window.cloudStorage.saveClasses(this.classes);
     }
 }
 
 // Initialize the app when the page loads
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     new FlowApp();
 });

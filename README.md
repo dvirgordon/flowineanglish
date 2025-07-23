@@ -56,9 +56,10 @@ A modern web application for managing English teaching classes and students. Bui
 ## Technical Details
 
 ### Storage
-- Uses browser localStorage for data persistence
-- Data is stored locally and persists between sessions
-- Easy to upgrade to cloud storage in the future
+- Uses Firebase Firestore for cloud data storage
+- Data is synchronized across all devices and browsers
+- Real-time updates and cloud backup
+- See FIREBASE_SETUP.md for configuration instructions
 
 ### Security
 - Simple authentication system with username/code pairs
@@ -85,12 +86,12 @@ flow-app/
 - No external dependencies except Font Awesome icons
 
 ## Future Enhancements
-- Cloud storage integration
 - Email notifications for class reminders
 - Multiple teacher support
 - Class attendance tracking
 - Payment integration
 - Mobile app version
+- Real-time notifications
 
 ## Support
 For questions or issues, please contact the development team.

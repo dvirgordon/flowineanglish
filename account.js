@@ -1,31 +1,36 @@
 // Account Management Page JavaScript
 class AccountPage {
     constructor() {
-        this.users = this.loadUsers();
-        this.classes = this.loadClasses();
+        this.users = [];
+        this.classes = [];
         this.currentUser = null;
-        this.filteredUsers = [...this.users];
-        this.filteredClasses = [...this.classes];
+        this.filteredUsers = [];
+        this.filteredClasses = [];
         
-        this.checkAuth();
+        this.initializePage();
+    }
+
+    // Initialize page
+    async initializePage() {
+        await this.checkAuth();
+        await this.loadDataFromCloud();
         this.bindEvents();
         this.renderUsers();
         this.renderClasses();
     }
 
     // Check if user is authenticated and is admin
-    checkAuth() {
-        const savedUser = localStorage.getItem('currentUser');
+    async checkAuth() {
+        const savedUser = await window.cloudStorage.loadCurrentUser();
         if (!savedUser) {
             window.location.href = 'login.html';
             return;
         }
-        const user = JSON.parse(savedUser);
-        if (!user.isAdmin) {
+        if (!savedUser.isAdmin) {
             window.location.href = 'dashboard.html';
             return;
         }
-        this.currentUser = user;
+        this.currentUser = savedUser;
     }
 
     // Bind event listeners
@@ -208,7 +213,7 @@ class AccountPage {
     }
 
     // Save user changes
-    saveUserChanges() {
+    async saveUserChanges() {
         const userId = document.getElementById('editUserForm').dataset.userId;
         const username = document.getElementById('editUsername').value;
         const code = document.getElementById('editCode').value;
@@ -225,7 +230,7 @@ class AccountPage {
         if (userIndex !== -1) {
             this.users[userIndex].username = username;
             this.users[userIndex].code = code;
-            this.saveUsers();
+            await this.saveUsers();
             
             this.hideModal('editUserModal');
             this.searchUsers(document.getElementById('userSearch').value);
@@ -241,7 +246,7 @@ class AccountPage {
     }
 
     // Delete user
-    deleteUser(userId = null) {
+    async deleteUser(userId = null) {
         const userToDelete = userId || document.getElementById('editUserForm').dataset.userId;
         
         // Find the user to get their details for notifications
@@ -249,7 +254,7 @@ class AccountPage {
         
         // Remove user from users array
         this.users = this.users.filter(u => u.id !== userToDelete);
-        this.saveUsers();
+        await this.saveUsers();
         
         // Remove all classes where this user is the student
         this.classes = this.classes.filter(c => c.studentId !== userToDelete);
@@ -257,10 +262,10 @@ class AccountPage {
         // Remove all classes created by this user (if they're a teacher)
         this.classes = this.classes.filter(c => c.createdBy !== userToDelete);
         
-        this.saveClasses();
+        await this.saveClasses();
         
         // Remove all notifications related to this user
-        this.removeUserNotifications(userToDelete);
+        await this.removeUserNotifications(userToDelete);
         
         this.hideModal('editUserModal');
         this.searchUsers(document.getElementById('userSearch').value);
@@ -269,16 +274,10 @@ class AccountPage {
     }
 
     // Remove notifications related to a user
-    removeUserNotifications(userId) {
-        const notifications = this.loadNotifications();
+    async removeUserNotifications(userId) {
+        const notifications = await window.cloudStorage.loadNotifications();
         const filteredNotifications = notifications.filter(n => n.userId !== userId);
-        localStorage.setItem('flowNotifications', JSON.stringify(filteredNotifications));
-    }
-
-    // Load notifications from localStorage
-    loadNotifications() {
-        const notifications = localStorage.getItem('flowNotifications');
-        return notifications ? JSON.parse(notifications) : [];
+        await window.cloudStorage.saveNotifications(filteredNotifications);
     }
 
     // Edit class
@@ -299,7 +298,7 @@ class AccountPage {
     }
 
     // Save class changes
-    saveClassChanges() {
+    async saveClassChanges() {
         const classId = document.getElementById('editClassForm').dataset.classId;
         const date = document.getElementById('editClassDate').value;
         const hour = document.getElementById('editClassHour').value;
@@ -315,7 +314,7 @@ class AccountPage {
             this.classes[classIndex].teacher = teacher;
             this.classes[classIndex].location = location;
             this.classes[classIndex].name = name;
-            this.saveClasses();
+            await this.saveClasses();
             
             this.hideModal('editClassModal');
             this.searchClasses(document.getElementById('classSearch').value);
@@ -331,7 +330,7 @@ class AccountPage {
     }
 
     // Delete class
-    deleteClass(classId = null) {
+    async deleteClass(classId = null) {
         const classToDelete = classId || document.getElementById('editClassForm').dataset.classId;
         
         // Find the class to get its details
@@ -339,10 +338,10 @@ class AccountPage {
         
         // Remove class from classes array
         this.classes = this.classes.filter(c => c.id !== classToDelete);
-        this.saveClasses();
+        await this.saveClasses();
         
         // Remove all notifications related to this class
-        this.removeClassNotifications(classToDelete);
+        await this.removeClassNotifications(classToDelete);
         
         this.hideModal('editClassModal');
         this.searchClasses(document.getElementById('classSearch').value);
@@ -350,8 +349,8 @@ class AccountPage {
     }
 
     // Remove notifications related to a class
-    removeClassNotifications(classId) {
-        const notifications = this.loadNotifications();
+    async removeClassNotifications(classId) {
+        const notifications = await window.cloudStorage.loadNotifications();
         const filteredNotifications = notifications.filter(n => {
             // Remove notifications that reference this class
             if (n.type === 'new_class' && n.data && n.data.className) {
@@ -360,7 +359,7 @@ class AccountPage {
             }
             return true;
         });
-        localStorage.setItem('flowNotifications', JSON.stringify(filteredNotifications));
+        await window.cloudStorage.saveNotifications(filteredNotifications);
     }
 
     // Change password
@@ -439,36 +438,40 @@ class AccountPage {
     }
 
     // Logout
-    logout() {
-        localStorage.removeItem('currentUser');
+    async logout() {
+        await window.cloudStorage.removeCurrentUser();
         window.location.href = 'login.html';
     }
 
-    // Load users from localStorage
-    loadUsers() {
-        const users = localStorage.getItem('flowUsers');
-        return users ? JSON.parse(users) : [];
+    // Load data from Firebase
+    async loadDataFromCloud() {
+        try {
+            this.users = await window.cloudStorage.loadUsers();
+            this.classes = await window.cloudStorage.loadClasses();
+            this.filteredUsers = [...this.users];
+            this.filteredClasses = [...this.classes];
+        } catch (error) {
+            console.error('Error loading data from cloud:', error);
+            this.users = [];
+            this.classes = [];
+            this.filteredUsers = [];
+            this.filteredClasses = [];
+        }
     }
 
-    // Save users to localStorage
-    saveUsers() {
-        localStorage.setItem('flowUsers', JSON.stringify(this.users));
+    // Save users to Firebase
+    async saveUsers() {
+        await window.cloudStorage.saveUsers(this.users);
     }
 
-    // Load classes from localStorage
-    loadClasses() {
-        const classes = localStorage.getItem('flowClasses');
-        return classes ? JSON.parse(classes) : [];
-    }
-
-    // Save classes to localStorage
-    saveClasses() {
-        localStorage.setItem('flowClasses', JSON.stringify(this.classes));
+    // Save classes to Firebase
+    async saveClasses() {
+        await window.cloudStorage.saveClasses(this.classes);
     }
 }
 
 // Initialize the account page when the page loads
 let accountPage;
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     accountPage = new AccountPage();
 }); 

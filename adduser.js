@@ -1,27 +1,32 @@
 // Add User Page JavaScript
 class AddUserPage {
     constructor() {
-        this.users = this.loadUsers();
-        this.classes = this.loadClasses();
+        this.users = [];
+        this.classes = [];
         this.currentDate = new Date();
         this.selectedDate = null;
         this.newUser = null;
         this.selectedClasses = [];
         
-        this.checkAuth();
+        this.initializePage();
+    }
+
+    // Initialize page
+    async initializePage() {
+        await this.checkAuth();
+        await this.loadDataFromCloud();
         this.initializeCalendar();
         this.bindEvents();
     }
 
     // Check if user is authenticated and is admin
-    checkAuth() {
-        const savedUser = localStorage.getItem('currentUser');
+    async checkAuth() {
+        const savedUser = await window.cloudStorage.loadCurrentUser();
         if (!savedUser) {
             window.location.href = 'login.html';
             return;
         }
-        const user = JSON.parse(savedUser);
-        if (!user.isAdmin) {
+        if (!savedUser.isAdmin) {
             window.location.href = 'dashboard.html';
             return;
         }
@@ -158,7 +163,7 @@ class AddUserPage {
     }
 
     // Create user with classes
-    createUserWithClasses() {
+    async createUserWithClasses() {
         if (!this.newUser) {
             this.showMessage('Please complete user information first.', 'error');
             return;
@@ -166,11 +171,11 @@ class AddUserPage {
 
         // Add user to users array
         this.users.push(this.newUser);
-        this.saveUsers();
+        await this.saveUsers();
 
         // Add classes to classes array
         this.classes.push(...this.selectedClasses);
-        this.saveClasses();
+        await this.saveClasses();
 
         this.showMessage(`User ${this.newUser.username} created with ${this.selectedClasses.length} classes!`, 'success');
         
@@ -346,36 +351,36 @@ class AddUserPage {
     }
 
     // Logout
-    logout() {
-        localStorage.removeItem('currentUser');
+    async logout() {
+        await window.cloudStorage.removeCurrentUser();
         window.location.href = 'login.html';
     }
 
-    // Load users from localStorage
-    loadUsers() {
-        const users = localStorage.getItem('flowUsers');
-        return users ? JSON.parse(users) : [];
+    // Load data from Firebase
+    async loadDataFromCloud() {
+        try {
+            this.users = await window.cloudStorage.loadUsers();
+            this.classes = await window.cloudStorage.loadClasses();
+        } catch (error) {
+            console.error('Error loading data from cloud:', error);
+            this.users = [];
+            this.classes = [];
+        }
     }
 
-    // Save users to localStorage
-    saveUsers() {
-        localStorage.setItem('flowUsers', JSON.stringify(this.users));
+    // Save users to Firebase
+    async saveUsers() {
+        await window.cloudStorage.saveUsers(this.users);
     }
 
-    // Load classes from localStorage
-    loadClasses() {
-        const classes = localStorage.getItem('flowClasses');
-        return classes ? JSON.parse(classes) : [];
-    }
-
-    // Save classes to localStorage
-    saveClasses() {
-        localStorage.setItem('flowClasses', JSON.stringify(this.classes));
+    // Save classes to Firebase
+    async saveClasses() {
+        await window.cloudStorage.saveClasses(this.classes);
     }
 }
 
 // Initialize the add user page when the page loads
 let addUserPage;
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     addUserPage = new AddUserPage();
 }); 

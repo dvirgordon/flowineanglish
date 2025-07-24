@@ -201,13 +201,18 @@ class AddUserPage {
                 }
             }
 
-            // Success message with cloud confirmation
-            this.showMessage(`✅ User "${this.newUser.username}" successfully created and uploaded to cloud with ${this.selectedClasses.length} classes! They can now login from any device.`, 'success');
+            // Success message with cloud confirmation and login instructions
+            this.showMessage(`✅ User "${this.newUser.username}" successfully created and uploaded to cloud with ${this.selectedClasses.length} classes! They can now login from any device using username: "${this.newUser.username}" and code: "${this.newUser.code}".`, 'success');
             
-            // Redirect back to dashboard after a short delay
+            // Show login instructions
+            setTimeout(() => {
+                this.showMessage(`💡 Login Instructions: Go to login page and use Username: "${this.newUser.username}" and Code: "${this.newUser.code}"`, 'info');
+            }, 2000);
+            
+            // Redirect back to dashboard after a longer delay
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
-            }, 3000);
+            }, 5000);
             
         } catch (error) {
             console.error('Error creating user:', error);

@@ -9,6 +9,19 @@
 <body>
     <p>Redirecting to Flow English Teaching Platform...</p>
     <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered successfully:', registration);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+        
         window.location.href = 'login.html';
     </script>
 </body>

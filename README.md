@@ -56,10 +56,10 @@ A modern web application for managing English teaching classes and students. Bui
 ## Technical Details
 
 ### Storage
-- Uses Firebase Firestore for cloud data storage
-- Data is synchronized across all devices and browsers
-- Real-time updates and cloud backup
-- See FIREBASE_SETUP.md for configuration instructions
+- Uses Firebase Firestore for cloud data persistence
+- All data is stored securely in the cloud
+- Data syncs across all devices and users
+- Automatic backup and data recovery
 
 ### Security
 - Simple authentication system with username/code pairs
@@ -85,13 +85,59 @@ flow-app/
 - Requires JavaScript enabled
 - No external dependencies except Font Awesome icons
 
+## Firebase Setup Instructions
+
+### Prerequisites
+1. Create a Firebase account at [https://firebase.google.com](https://firebase.google.com)
+2. Create a new Firebase project
+
+### Setup Steps
+1. **Enable Firestore Database**:
+   - Go to your Firebase project console
+   - Navigate to "Firestore Database"
+   - Click "Create Database"
+   - Choose "Start in test mode" for development
+
+2. **Get Firebase Configuration**:
+   - Go to Project Settings (gear icon)
+   - Scroll down to "Your apps" section
+   - Click "Add app" and choose "Web"
+   - Register your app and copy the configuration
+
+3. **Update Configuration**:
+   - Open `firebace.js` file
+   - Replace the placeholder configuration with your actual Firebase config:
+   ```javascript
+   const firebaseConfig = {
+     apiKey: "your-api-key",
+     authDomain: "your-project.firebaseapp.com",
+     projectId: "your-project-id",
+     storageBucket: "your-project.appspot.com",
+     messagingSenderId: "your-sender-id",
+     appId: "your-app-id"
+   };
+   ```
+
+4. **Security Rules** (Optional):
+   - In Firestore Database, go to "Rules" tab
+   - Update rules for production use:
+   ```javascript
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /flowData/{document} {
+         allow read, write: if true; // For development
+       }
+     }
+   }
+   ```
+
 ## Future Enhancements
 - Email notifications for class reminders
 - Multiple teacher support
 - Class attendance tracking
 - Payment integration
 - Mobile app version
-- Real-time notifications
 
 ## Support
 For questions or issues, please contact the development team.
@@ -115,4 +161,4 @@ The loading screen:
 5. After exactly 1 second, loading screen disappears
 6. User is taken to their dashboard (admin or student)
 
-The timing is already set to exactly one second as you requested! The loading screen provides a nice visual transition and gives users feedback that their login is being processed. 🎉 
+The timing is already set to exactly one second as you requested! The loading screen provides a nice visual transition and gives users feedback that their login is being processed. 🎉 "# flowineanglish" 

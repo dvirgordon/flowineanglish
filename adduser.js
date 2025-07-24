@@ -8,34 +8,42 @@ class AddUserPage {
         this.newUser = null;
         this.selectedClasses = [];
         
-        this.initializePage();
-    }
-
-    // Initialize page
-    async initializePage() {
-        await this.checkAuth();
-        await this.loadDataFromCloud();
+        this.checkAuth();
         this.initializeCalendar();
         this.bindEvents();
     }
 
     // Check if user is authenticated and is admin
-    async checkAuth() {
-        const savedUser = await window.cloudStorage.loadCurrentUser();
+    checkAuth() {
+        const savedUser = localStorage.getItem('currentUser');
         if (!savedUser) {
             window.location.href = 'login.html';
             return;
         }
-        if (!savedUser.isAdmin) {
+        const user = JSON.parse(savedUser);
+        if (!user.isAdmin) {
             window.location.href = 'dashboard.html';
             return;
         }
     }
 
     // Initialize calendar
-    initializeCalendar() {
+    async initializeCalendar() {
+        await this.loadDataFromCloud();
         this.updateCalendarHeader();
         this.renderCalendar();
+    }
+
+    // Load all data from cloud storage
+    async loadDataFromCloud() {
+        try {
+            this.users = await this.loadUsers();
+            this.classes = await this.loadClasses();
+        } catch (error) {
+            console.error('Error loading data from cloud:', error);
+            this.users = [];
+            this.classes = [];
+        }
     }
 
     // Bind event listeners
@@ -169,20 +177,42 @@ class AddUserPage {
             return;
         }
 
-        // Add user to users array
-        this.users.push(this.newUser);
-        await this.saveUsers();
+        try {
+            // Show loading message
+            this.showMessage('Creating user and uploading to cloud...', 'success');
 
-        // Add classes to classes array
-        this.classes.push(...this.selectedClasses);
-        await this.saveClasses();
+            // Add user to users array
+            this.users.push(this.newUser);
+            const userSaved = await this.saveUsers();
+            
+            if (!userSaved) {
+                this.showMessage('Failed to save user to cloud. Please try again.', 'error');
+                return;
+            }
 
-        this.showMessage(`User ${this.newUser.username} created with ${this.selectedClasses.length} classes!`, 'success');
-        
-        // Redirect back to dashboard after a short delay
-        setTimeout(() => {
-            window.location.href = 'dashboard.html';
-        }, 2000);
+            // Add classes to classes array (if any)
+            if (this.selectedClasses.length > 0) {
+                this.classes.push(...this.selectedClasses);
+                const classesSaved = await this.saveClasses();
+                
+                if (!classesSaved) {
+                    this.showMessage('User created but failed to save classes to cloud. Please try again.', 'error');
+                    return;
+                }
+            }
+
+            // Success message with cloud confirmation
+            this.showMessage(`✅ User "${this.newUser.username}" successfully created and uploaded to cloud with ${this.selectedClasses.length} classes! They can now login from any device.`, 'success');
+            
+            // Redirect back to dashboard after a short delay
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 3000);
+            
+        } catch (error) {
+            console.error('Error creating user:', error);
+            this.showMessage('Failed to create user. Please check your internet connection and try again.', 'error');
+        }
     }
 
     // Show specific step
@@ -351,31 +381,43 @@ class AddUserPage {
     }
 
     // Logout
-    async logout() {
-        await window.cloudStorage.removeCurrentUser();
+    logout() {
+        localStorage.removeItem('currentUser');
         window.location.href = 'login.html';
     }
 
-    // Load data from Firebase
-    async loadDataFromCloud() {
+    // Load users from cloud storage
+    async loadUsers() {
+        const users = await window.cloudStorage.loadData('flowUsers');
+        return users || [];
+    }
+
+    // Save users to cloud storage
+    async saveUsers() {
         try {
-            this.users = await window.cloudStorage.loadUsers();
-            this.classes = await window.cloudStorage.loadClasses();
+            const result = await window.cloudStorage.saveData('flowUsers', this.users);
+            return result;
         } catch (error) {
-            console.error('Error loading data from cloud:', error);
-            this.users = [];
-            this.classes = [];
+            console.error('Error saving users to cloud:', error);
+            return false;
         }
     }
 
-    // Save users to Firebase
-    async saveUsers() {
-        await window.cloudStorage.saveUsers(this.users);
+    // Load classes from cloud storage
+    async loadClasses() {
+        const classes = await window.cloudStorage.loadData('flowClasses');
+        return classes || [];
     }
 
-    // Save classes to Firebase
+    // Save classes to cloud storage
     async saveClasses() {
-        await window.cloudStorage.saveClasses(this.classes);
+        try {
+            const result = await window.cloudStorage.saveData('flowClasses', this.classes);
+            return result;
+        } catch (error) {
+            console.error('Error saving classes to cloud:', error);
+            return false;
+        }
     }
 }
 
@@ -383,4 +425,5 @@ class AddUserPage {
 let addUserPage;
 document.addEventListener('DOMContentLoaded', async () => {
     addUserPage = new AddUserPage();
+    await addUserPage.initializeCalendar();
 }); 

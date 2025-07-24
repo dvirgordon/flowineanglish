@@ -1,6 +1,6 @@
-// Firebase Configuration
+// Firebase configuration
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, deleteDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 // Your Firebase configuration
 const firebaseConfig = {
@@ -16,126 +16,58 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Cloud Storage Service
-class CloudStorageService {
-    constructor() {
-        this.db = db;
-    }
-
-    // Save data to Firebase
-    async saveData(collectionName, documentId, data) {
+// Cloud storage service
+class CloudStorage {
+    // Save data to Firestore
+    async saveData(key, data) {
         try {
-            await setDoc(doc(this.db, collectionName, documentId), data);
-            console.log(`Data saved to ${collectionName}/${documentId}`);
+            await setDoc(doc(db, 'flowData', key), { data: data, timestamp: new Date() });
             return true;
         } catch (error) {
-            console.error('Error saving data:', error);
+            console.error('Error saving data to cloud:', error);
             return false;
         }
     }
 
-    // Load data from Firebase
-    async loadData(collectionName, documentId) {
+    // Load data from Firestore
+    async loadData(key) {
         try {
-            const docRef = doc(this.db, collectionName, documentId);
+            const docRef = doc(db, 'flowData', key);
             const docSnap = await getDoc(docRef);
             
             if (docSnap.exists()) {
-                return docSnap.data();
+                return docSnap.data().data;
             } else {
-                console.log(`No data found in ${collectionName}/${documentId}`);
                 return null;
             }
         } catch (error) {
-            console.error('Error loading data:', error);
+            console.error('Error loading data from cloud:', error);
             return null;
         }
     }
 
-    // Load all documents from a collection
-    async loadAllData(collectionName) {
+    // Remove data from Firestore
+    async removeData(key) {
         try {
-            const querySnapshot = await getDocs(collection(this.db, collectionName));
-            const data = [];
-            querySnapshot.forEach((doc) => {
-                data.push({ id: doc.id, ...doc.data() });
-            });
-            return data;
-        } catch (error) {
-            console.error('Error loading all data:', error);
-            return [];
-        }
-    }
-
-    // Update data in Firebase
-    async updateData(collectionName, documentId, data) {
-        try {
-            const docRef = doc(this.db, collectionName, documentId);
-            await updateDoc(docRef, data);
-            console.log(`Data updated in ${collectionName}/${documentId}`);
+            await deleteDoc(doc(db, 'flowData', key));
             return true;
         } catch (error) {
-            console.error('Error updating data:', error);
+            console.error('Error removing data from cloud:', error);
             return false;
         }
     }
 
-    // Delete data from Firebase
-    async deleteData(collectionName, documentId) {
+    // Update data in Firestore
+    async updateData(key, data) {
         try {
-            await deleteDoc(doc(this.db, collectionName, documentId));
-            console.log(`Data deleted from ${collectionName}/${documentId}`);
+            await updateDoc(doc(db, 'flowData', key), { data: data, timestamp: new Date() });
             return true;
         } catch (error) {
-            console.error('Error deleting data:', error);
+            console.error('Error updating data in cloud:', error);
             return false;
         }
-    }
-
-    // Specific methods for Flow app data
-    async saveUsers(users) {
-        return await this.saveData('flowData', 'users', { users });
-    }
-
-    async loadUsers() {
-        const data = await this.loadData('flowData', 'users');
-        return data ? data.users : [];
-    }
-
-    async saveClasses(classes) {
-        return await this.saveData('flowData', 'classes', { classes });
-    }
-
-    async loadClasses() {
-        const data = await this.loadData('flowData', 'classes');
-        return data ? data.classes : [];
-    }
-
-    async saveNotifications(notifications) {
-        return await this.saveData('flowData', 'notifications', { notifications });
-    }
-
-    async loadNotifications() {
-        const data = await this.loadData('flowData', 'notifications');
-        return data ? data.notifications : [];
-    }
-
-    async saveCurrentUser(user) {
-        return await this.saveData('flowData', 'currentUser', { user });
-    }
-
-    async loadCurrentUser() {
-        const data = await this.loadData('flowData', 'currentUser');
-        return data ? data.user : null;
-    }
-
-    async removeCurrentUser() {
-        return await this.deleteData('flowData', 'currentUser');
     }
 }
 
 // Create global instance
-window.cloudStorage = new CloudStorageService();
-
-// Export for use in other modules
-export { CloudStorageService, cloudStorage };
+window.cloudStorage = new CloudStorage();

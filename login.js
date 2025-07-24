@@ -3,7 +3,6 @@ class LoginPage {
     constructor() {
         this.users = [];
         this.bindEvents();
-        this.initializePage();
     }
 
     // Bind event listeners
@@ -15,13 +14,13 @@ class LoginPage {
     }
 
     // Handle user login
-    async handleLogin() {
+    handleLogin() {
         const username = document.getElementById('username').value;
         const code = document.getElementById('code').value;
 
         if (username === 'tamar' && code === '4378') {
             const user = { username: 'tamar', isAdmin: true, role: 'admin' };
-            await window.cloudStorage.saveCurrentUser(user);
+            localStorage.setItem('currentUser', JSON.stringify(user));
             window.location.href = 'dashboard.html';
         } else {
             const user = this.users.find(u => u.username === username && u.code === code);
@@ -30,7 +29,7 @@ class LoginPage {
                 if (!user.role) {
                     user.role = 'student'; // Default to student for existing users
                 }
-                await window.cloudStorage.saveCurrentUser(user);
+                localStorage.setItem('currentUser', JSON.stringify(user));
                 window.location.href = 'dashboard.html';
             } else {
                 this.showMessage('Invalid username or code. Please try again.', 'error');
@@ -63,18 +62,15 @@ class LoginPage {
         }, 5000);
     }
 
-    // Initialize page data
-    async initializePage() {
-        try {
-            this.users = await window.cloudStorage.loadUsers();
-        } catch (error) {
-            console.error('Error loading users:', error);
-            this.users = [];
-        }
+    // Load users from cloud storage
+    async loadUsers() {
+        const users = await window.cloudStorage.loadData('flowUsers');
+        return users || [];
     }
 }
 
 // Initialize the login page when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    new LoginPage();
+    const loginPage = new LoginPage();
+    loginPage.users = await loginPage.loadUsers();
 }); 

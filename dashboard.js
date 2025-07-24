@@ -8,35 +8,42 @@ class DashboardPage {
         this.classes = [];
         this.notifications = [];
 
-        this.initializePage();
-    }
-
-    // Initialize page
-    async initializePage() {
-        await this.checkAuth();
-        await this.loadDataFromCloud();
+        this.checkAuth();
         this.initializeDashboard();
         this.bindEvents();
     }
 
     // Check if user is authenticated
-    async checkAuth() {
-        const savedUser = await window.cloudStorage.loadCurrentUser();
+    checkAuth() {
+        const savedUser = localStorage.getItem('currentUser');
         if (!savedUser) {
             window.location.href = 'login.html';
             return;
         }
-        this.currentUser = savedUser;
+        this.currentUser = JSON.parse(savedUser);
     }
 
     // Initialize dashboard
     async initializeDashboard() {
+        await this.loadDataFromCloud();
         this.updateUserWelcome();
         this.showRoleControls();
         this.updateCalendarHeader();
         this.renderCalendar();
         this.renderUserClasses();
-        await this.renderNotifications();
+        this.renderNotifications();
+    }
+
+    // Load all data from cloud storage
+    async loadDataFromCloud() {
+        try {
+            this.classes = await this.loadClasses();
+            this.notifications = await this.loadNotifications();
+        } catch (error) {
+            console.error('Error loading data from cloud:', error);
+            this.classes = [];
+            this.notifications = [];
+        }
     }
 
     // Show controls based on user role
@@ -144,7 +151,7 @@ class DashboardPage {
         await this.saveClasses();
 
         // Create notification for admin
-        await this.createNotification('admin', 'new_class', {
+        this.createNotification('admin', 'new_class', {
             teacher: this.currentUser.username,
             className: name,
             date: date,
@@ -199,7 +206,7 @@ class DashboardPage {
             await this.saveClasses();
 
             // Create notification for admin
-            await this.createNotification('admin', 'class_cancelled', {
+            this.createNotification('admin', 'class_cancelled', {
                 cancelledBy: this.currentUser.username,
                 className: cls.name,
                 date: cls.date,
@@ -208,9 +215,9 @@ class DashboardPage {
             });
 
             // Find teacher and notify them (if they didn't cancel it themselves)
-            const teacher = await this.findUserById(cls.createdBy);
+            const teacher = this.findUserById(cls.createdBy);
             if (teacher && teacher.id !== this.currentUser.id) {
-                await this.createNotification(teacher.id, 'class_cancelled', {
+                this.createNotification(teacher.id, 'class_cancelled', {
                     cancelledBy: this.currentUser.username,
                     className: cls.name,
                     date: cls.date,
@@ -221,7 +228,7 @@ class DashboardPage {
 
             // Notify student if they didn't cancel it themselves and were assigned to this class
             if (cls.studentId && cls.studentId !== this.currentUser.id) {
-                await this.createNotification(cls.studentId, 'class_cancelled', {
+                this.createNotification(cls.studentId, 'class_cancelled', {
                     cancelledBy: this.currentUser.username,
                     className: cls.name,
                     date: cls.date,
@@ -231,7 +238,7 @@ class DashboardPage {
             }
 
             this.renderUserClasses();
-            await this.renderNotifications();
+            this.renderNotifications();
             this.showMessage('Class cancelled and permanently deleted from the system!', 'success');
         }
     }
@@ -262,12 +269,12 @@ class DashboardPage {
         console.log('Total notifications:', this.notifications.length);
         
         // Force reload and render notifications immediately
-        this.renderNotifications();
+        await this.renderNotifications();
     }
 
     // Test notification function (for debugging)
-    async testNotification() {
-        await this.createNotification(this.currentUser.id, 'test', {
+    testNotification() {
+        this.createNotification(this.currentUser.id, 'test', {
             message: 'This is a test notification',
             timestamp: new Date().toISOString()
         });
@@ -277,8 +284,8 @@ class DashboardPage {
     async renderNotifications() {
         const container = document.getElementById('notificationsList');
         
-        // Reload notifications from Firebase to get the latest ones
-        this.notifications = await window.cloudStorage.loadNotifications();
+        // Reload notifications from cloud storage to get the latest ones
+        this.notifications = await this.loadNotifications();
         
         const userNotifications = this.notifications.filter(n => {
             // Admin sees all admin notifications and their own
@@ -350,14 +357,27 @@ class DashboardPage {
         return users.find(u => u.id === userId);
     }
 
-    // Load users from Firebase
+    // Load users from cloud storage
     async loadUsers() {
-        return await window.cloudStorage.loadUsers();
+        const users = await window.cloudStorage.loadData('flowUsers');
+        return users || [];
     }
 
-    // Save notifications to Firebase
+    // Load notifications from cloud storage
+    async loadNotifications() {
+        const notifications = await window.cloudStorage.loadData('flowNotifications');
+        return notifications || [];
+    }
+
+    // Save notifications to cloud storage
     async saveNotifications() {
-        await window.cloudStorage.saveNotifications(this.notifications);
+        try {
+            const result = await window.cloudStorage.saveData('flowNotifications', this.notifications);
+            return result;
+        } catch (error) {
+            console.error('Error saving notifications to cloud:', error);
+            return false;
+        }
     }
 
     // Render user classes
@@ -565,26 +585,26 @@ class DashboardPage {
     }
 
     // Logout
-    async logout() {
-        await window.cloudStorage.removeCurrentUser();
+    logout() {
+        localStorage.removeItem('currentUser');
         window.location.href = 'login.html';
     }
 
-    // Load data from Firebase
-    async loadDataFromCloud() {
-        try {
-            this.classes = await window.cloudStorage.loadClasses();
-            this.notifications = await window.cloudStorage.loadNotifications();
-        } catch (error) {
-            console.error('Error loading data from cloud:', error);
-            this.classes = [];
-            this.notifications = [];
-        }
+    // Load classes from cloud storage
+    async loadClasses() {
+        const classes = await window.cloudStorage.loadData('flowClasses');
+        return classes || [];
     }
 
-    // Save classes to Firebase
+    // Save classes to cloud storage
     async saveClasses() {
-        await window.cloudStorage.saveClasses(this.classes);
+        try {
+            const result = await window.cloudStorage.saveData('flowClasses', this.classes);
+            return result;
+        } catch (error) {
+            console.error('Error saving classes to cloud:', error);
+            return false;
+        }
     }
 }
 
@@ -592,4 +612,5 @@ class DashboardPage {
 let dashboardPage;
 document.addEventListener('DOMContentLoaded', async () => {
     dashboardPage = new DashboardPage();
+    await dashboardPage.initializeDashboard();
 }); 

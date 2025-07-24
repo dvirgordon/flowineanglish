@@ -13,7 +13,7 @@ class FlowApp {
 
     // Initialize the app
     async initializeApp() {
-        // Load data from Firebase
+        // Load data from cloud storage
         await this.loadDataFromCloud();
         
         // Set current date for calendar
@@ -21,10 +21,23 @@ class FlowApp {
         this.renderCalendar();
         
         // Check if user is already logged in
-        const savedUser = await window.cloudStorage.loadCurrentUser();
+        const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
-            this.currentUser = savedUser;
+            this.currentUser = JSON.parse(savedUser);
             this.showMainDashboard();
+        }
+    }
+
+    // Load all data from cloud storage
+    async loadDataFromCloud() {
+        try {
+            this.users = await this.loadUsers();
+            this.classes = await this.loadClasses();
+        } catch (error) {
+            console.error('Error loading data from cloud:', error);
+            // Fallback to empty arrays if cloud loading fails
+            this.users = [];
+            this.classes = [];
         }
     }
 
@@ -94,14 +107,14 @@ class FlowApp {
     }
 
     // Handle user login
-    async handleLogin() {
+    handleLogin() {
         const username = document.getElementById('username').value;
         const code = document.getElementById('code').value;
 
         // Check if it's the admin (Tamar)
         if (username === 'tamar' && code === '4378') {
             this.currentUser = { username: 'tamar', isAdmin: true };
-            await window.cloudStorage.saveCurrentUser(this.currentUser);
+            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
             this.showMainDashboard();
             this.showMessage('Welcome back, Tamar!', 'success');
         } else {
@@ -109,7 +122,7 @@ class FlowApp {
             const user = this.users.find(u => u.username === username && u.code === code);
             if (user) {
                 this.currentUser = user;
-                await window.cloudStorage.saveCurrentUser(this.currentUser);
+                localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
                 this.showMainDashboard();
                 this.showMessage(`Welcome back, ${user.username}!`, 'success');
             } else {
@@ -132,20 +145,31 @@ class FlowApp {
             return;
         }
 
-        // Create new user
-        const newUser = {
-            id: Date.now().toString(),
-            username: username,
-            code: code,
-            isAdmin: false
-        };
+        try {
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                username: username,
+                code: code,
+                isAdmin: false
+            };
 
-        this.users.push(newUser);
-        await this.saveUsers();
-
-        this.showMessage(`User ${username} created successfully!`, 'success');
-        document.getElementById('addUserForm').reset();
-        this.showMainDashboard();
+            this.users.push(newUser);
+            const userSaved = await this.saveUsers();
+            
+            if (userSaved) {
+                this.showMessage(`✅ User "${username}" created successfully and uploaded to cloud! They can now login from any device.`, 'success');
+            } else {
+                this.showMessage('Failed to save user to cloud. Please try again.', 'error');
+                return;
+            }
+            
+            document.getElementById('addUserForm').reset();
+            this.showMainDashboard();
+        } catch (error) {
+            console.error('Error creating user:', error);
+            this.showMessage('Failed to create user. Please check your internet connection and try again.', 'error');
+        }
     }
 
     // Handle adding a new class
@@ -156,25 +180,36 @@ class FlowApp {
         const location = document.getElementById('classLocation').value;
         const name = document.getElementById('className').value;
 
-        // Create new class
-        const newClass = {
-            id: Date.now().toString(),
-            date: date,
-            hour: hour,
-            teacher: teacher,
-            location: location,
-            name: name,
-            studentId: this.currentUser.isAdmin ? null : this.currentUser.id
-        };
+        try {
+            // Create new class
+            const newClass = {
+                id: Date.now().toString(),
+                date: date,
+                hour: hour,
+                teacher: teacher,
+                location: location,
+                name: name,
+                studentId: this.currentUser.isAdmin ? null : this.currentUser.id
+            };
 
-        this.classes.push(newClass);
-        await this.saveClasses();
-
-        this.showMessage('Class added successfully!', 'success');
-        document.getElementById('addClassForm').reset();
-        this.hideModal('addClassModal');
-        this.renderCalendar();
-        this.renderUserClasses();
+            this.classes.push(newClass);
+            const classSaved = await this.saveClasses();
+            
+            if (classSaved) {
+                this.showMessage('✅ Class added successfully and uploaded to cloud!', 'success');
+            } else {
+                this.showMessage('Failed to save class to cloud. Please try again.', 'error');
+                return;
+            }
+            
+            document.getElementById('addClassForm').reset();
+            this.hideModal('addClassModal');
+            this.renderCalendar();
+            this.renderUserClasses();
+        } catch (error) {
+            console.error('Error adding class:', error);
+            this.showMessage('Failed to add class. Please check your internet connection and try again.', 'error');
+        }
     }
 
     // Show main dashboard
@@ -381,9 +416,9 @@ class FlowApp {
     }
 
     // Logout
-    async logout() {
+    logout() {
         this.currentUser = null;
-        await window.cloudStorage.removeCurrentUser();
+        localStorage.removeItem('currentUser');
         
         // Reset login form
         const loginForm = document.getElementById('loginFormContainer');
@@ -393,30 +428,43 @@ class FlowApp {
         this.showMessage('Logged out successfully!', 'success');
     }
 
-    // Load data from Firebase
-    async loadDataFromCloud() {
+    // Load users from cloud storage
+    async loadUsers() {
+        const users = await window.cloudStorage.loadData('flowUsers');
+        return users || [];
+    }
+
+    // Save users to cloud storage
+    async saveUsers() {
         try {
-            this.users = await window.cloudStorage.loadUsers();
-            this.classes = await window.cloudStorage.loadClasses();
+            const result = await window.cloudStorage.saveData('flowUsers', this.users);
+            return result;
         } catch (error) {
-            console.error('Error loading data from cloud:', error);
-            this.users = [];
-            this.classes = [];
+            console.error('Error saving users to cloud:', error);
+            return false;
         }
     }
 
-    // Save users to Firebase
-    async saveUsers() {
-        await window.cloudStorage.saveUsers(this.users);
+    // Load classes from cloud storage
+    async loadClasses() {
+        const classes = await window.cloudStorage.loadData('flowClasses');
+        return classes || [];
     }
 
-    // Save classes to Firebase
+    // Save classes to cloud storage
     async saveClasses() {
-        await window.cloudStorage.saveClasses(this.classes);
+        try {
+            const result = await window.cloudStorage.saveData('flowClasses', this.classes);
+            return result;
+        } catch (error) {
+            console.error('Error saving classes to cloud:', error);
+            return false;
+        }
     }
 }
 
 // Initialize the app when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    new FlowApp();
+    const app = new FlowApp();
+    await app.initializeApp();
 });

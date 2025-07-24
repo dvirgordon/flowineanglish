@@ -7,30 +7,41 @@ class AccountPage {
         this.filteredUsers = [];
         this.filteredClasses = [];
         
-        this.initializePage();
-    }
-
-    // Initialize page
-    async initializePage() {
-        await this.checkAuth();
-        await this.loadDataFromCloud();
+        this.checkAuth();
         this.bindEvents();
-        this.renderUsers();
-        this.renderClasses();
     }
 
     // Check if user is authenticated and is admin
-    async checkAuth() {
-        const savedUser = await window.cloudStorage.loadCurrentUser();
+    checkAuth() {
+        const savedUser = localStorage.getItem('currentUser');
         if (!savedUser) {
             window.location.href = 'login.html';
             return;
         }
-        if (!savedUser.isAdmin) {
+        const user = JSON.parse(savedUser);
+        if (!user.isAdmin) {
             window.location.href = 'dashboard.html';
             return;
         }
-        this.currentUser = savedUser;
+        this.currentUser = user;
+    }
+
+    // Initialize data from cloud storage
+    async initializeData() {
+        try {
+            this.users = await this.loadUsers();
+            this.classes = await this.loadClasses();
+            this.filteredUsers = [...this.users];
+            this.filteredClasses = [...this.classes];
+            this.renderUsers();
+            this.renderClasses();
+        } catch (error) {
+            console.error('Error loading data from cloud:', error);
+            this.users = [];
+            this.classes = [];
+            this.filteredUsers = [];
+            this.filteredClasses = [];
+        }
     }
 
     // Bind event listeners
@@ -275,9 +286,15 @@ class AccountPage {
 
     // Remove notifications related to a user
     async removeUserNotifications(userId) {
-        const notifications = await window.cloudStorage.loadNotifications();
+        const notifications = await this.loadNotifications();
         const filteredNotifications = notifications.filter(n => n.userId !== userId);
-        await window.cloudStorage.saveNotifications(filteredNotifications);
+        await window.cloudStorage.saveData('flowNotifications', filteredNotifications);
+    }
+
+    // Load notifications from cloud storage
+    async loadNotifications() {
+        const notifications = await window.cloudStorage.loadData('flowNotifications');
+        return notifications || [];
     }
 
     // Edit class
@@ -350,7 +367,7 @@ class AccountPage {
 
     // Remove notifications related to a class
     async removeClassNotifications(classId) {
-        const notifications = await window.cloudStorage.loadNotifications();
+        const notifications = await this.loadNotifications();
         const filteredNotifications = notifications.filter(n => {
             // Remove notifications that reference this class
             if (n.type === 'new_class' && n.data && n.data.className) {
@@ -359,7 +376,7 @@ class AccountPage {
             }
             return true;
         });
-        await window.cloudStorage.saveNotifications(filteredNotifications);
+        await window.cloudStorage.saveData('flowNotifications', filteredNotifications);
     }
 
     // Change password
@@ -438,35 +455,43 @@ class AccountPage {
     }
 
     // Logout
-    async logout() {
-        await window.cloudStorage.removeCurrentUser();
+    logout() {
+        localStorage.removeItem('currentUser');
         window.location.href = 'login.html';
     }
 
-    // Load data from Firebase
-    async loadDataFromCloud() {
+    // Load users from cloud storage
+    async loadUsers() {
+        const users = await window.cloudStorage.loadData('flowUsers');
+        return users || [];
+    }
+
+    // Save users to cloud storage
+    async saveUsers() {
         try {
-            this.users = await window.cloudStorage.loadUsers();
-            this.classes = await window.cloudStorage.loadClasses();
-            this.filteredUsers = [...this.users];
-            this.filteredClasses = [...this.classes];
+            const result = await window.cloudStorage.saveData('flowUsers', this.users);
+            return result;
         } catch (error) {
-            console.error('Error loading data from cloud:', error);
-            this.users = [];
-            this.classes = [];
-            this.filteredUsers = [];
-            this.filteredClasses = [];
+            console.error('Error saving users to cloud:', error);
+            return false;
         }
     }
 
-    // Save users to Firebase
-    async saveUsers() {
-        await window.cloudStorage.saveUsers(this.users);
+    // Load classes from cloud storage
+    async loadClasses() {
+        const classes = await window.cloudStorage.loadData('flowClasses');
+        return classes || [];
     }
 
-    // Save classes to Firebase
+    // Save classes to cloud storage
     async saveClasses() {
-        await window.cloudStorage.saveClasses(this.classes);
+        try {
+            const result = await window.cloudStorage.saveData('flowClasses', this.classes);
+            return result;
+        } catch (error) {
+            console.error('Error saving classes to cloud:', error);
+            return false;
+        }
     }
 }
 
@@ -474,4 +499,5 @@ class AccountPage {
 let accountPage;
 document.addEventListener('DOMContentLoaded', async () => {
     accountPage = new AccountPage();
+    await accountPage.initializeData();
 }); 

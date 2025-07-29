@@ -20,18 +20,38 @@
     
     <link rel="stylesheet" href="style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            opacity: 0;
+            animation: pageFadeIn 1s ease-out forwards;
+        }
+
         .dashboard-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            opacity: 0;
+            animation: contentFadeIn 1.2s ease-out 0.3s forwards;
         }
         
         .calendar-section {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .calendar-header {
@@ -47,17 +67,23 @@
         }
         
         .nav-btn {
-            padding: 8px 16px;
-            background: #007bff;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            padding: 1em 2em;
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff6b6b 100%);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
         
         .nav-btn:hover {
-            background: #0056b3;
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff6b6b 100%);
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.5);
         }
         
         .current-month {
@@ -83,19 +109,49 @@
         }
         
         .calendar-day {
-            background: white;
+            background: linear-gradient(135deg, #f8faff 0%, #e8f0fe 100%);
             padding: 15px 10px;
             text-align: center;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
             min-height: 60px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            border: 2px solid #e8f0fe;
+            border-radius: 12px;
+            font-weight: 500;
+            color: #333;
         }
         
         .calendar-day:hover {
-            background: #f8f9fa;
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+            border-color: #007bff;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+            z-index: 2;
+        }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .calendar-day.other-month {
@@ -167,11 +223,33 @@
         .form-group input,
         .form-group select,
         .form-group textarea {
+            font-family: 'Poppins', sans-serif;
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 16px 20px;
+            border: 2px solid #e8f0fe;
+            border-radius: 20px;
             font-size: 16px;
+            background-color: #f8faff;
+            transition: all 0.3s ease;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            background-color: #ffffff;
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.2);
+            transform: scale(1.02) translateY(-3px);
+        }
+
+        .form-group input:hover,
+        .form-group select:hover,
+        .form-group textarea:hover {
+            transform: scale(1.01) translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         .form-group input:disabled {
@@ -185,18 +263,24 @@
         }
         
         .request-btn {
-            background: #28a745;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
             color: white;
-            padding: 12px 30px;
+            padding: 1em 2em;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
             font-size: 16px;
             width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
         }
         
         .request-btn:hover {
-            background: #218838;
+            background: linear-gradient(135deg, #00e6b8 0%, #00c4a0 100%);
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 212, 170, 0.5);
         }
         
         .request-btn:disabled {
@@ -205,11 +289,13 @@
         }
         
         .welcome-section {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             padding: 30px;
             margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .welcome-section h1 {
@@ -230,11 +316,19 @@
         }
         
         .stat-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             padding: 25px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
         
         .stat-number {

@@ -123,6 +123,74 @@
             font-weight: 700;
         }
 
+        .main-heading {
+            font-size: 4.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            animation: headingGlow 3s ease-in-out infinite alternate;
+        }
+
+        .sub-heading {
+            font-size: 2.2rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: subHeadingFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes headingGlow {
+            0% {
+                filter: drop-shadow(0 0 5px rgba(255, 107, 107, 0.5));
+            }
+            100% {
+                filter: drop-shadow(0 0 20px rgba(78, 205, 196, 0.8));
+            }
+        }
+
+        @keyframes subHeadingFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Responsive styles for headings */
+        @media (max-width: 768px) {
+            .main-heading {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .sub-heading {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-heading {
+                font-size: 2.5rem;
+            }
+            
+            .sub-heading {
+                font-size: 1.2rem;
+            }
+        }
+
         .hero p {
             font-size: 1.25rem;
             margin-bottom: 2rem;
@@ -394,7 +462,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Master English with Flow</h1>
+            <h1 class="main-heading">🎉 Welcome to Flow in English!</h1>
+            <h2 class="sub-heading">Where learning English feels like play!</h2>
             <p>Professional English learning platform with personalized classes, expert teachers, and comprehensive tools to accelerate your language journey.</p>
             <div class="cta-buttons">
                 <a href="/login.html" class="cta-primary">Start Learning</a>

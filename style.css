@@ -1,0 +1,972 @@
+/* Flow English - Main Stylesheet */
+/* Using Google Font: Poppins */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    min-height: 100vh;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Login Page Styles */
+.welcome-heading {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: fadeInDown 0.8s ease-out;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.welcome-heading h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.login-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 0.3s forwards;
+}
+
+.login-icon {
+    flex-shrink: 0;
+    animation: float 3s ease-in-out infinite, fadeInScale 1s ease-out 0.9s forwards;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+    opacity: 0;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.login-icon svg {
+    transition: transform 0.3s ease;
+}
+
+.login-icon:hover svg {
+    transform: scale(1.05);
+}
+
+.inspiration-message {
+    text-align: center;
+    margin-top: 40px;
+    animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+.inspiration-message p {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 0;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.inspiration-message p:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInScale 1.2s ease-out 0.6s forwards;
+}
+
+.login-card h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.7s forwards;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.input-group:nth-child(1) {
+    animation-delay: 0.8s;
+}
+
+.input-group:nth-child(2) {
+    animation-delay: 1s;
+}
+
+.input-group:nth-child(3) {
+    animation-delay: 1.2s;
+}
+
+.input-group label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e8f0fe;
+    border-radius: 12px;
+    font-size: 1rem;
+    background-color: #f8faff;
+    transition: all 0.3s ease;
+    color: #333;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.login-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    background: #007bff;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 1.4s forwards;
+}
+
+.login-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+/* Dashboard Styles */
+.dashboard-container {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.dashboard-header {
+    background: white;
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 2rem;
+    color: #333;
+    text-align: center;
+}
+
+/* Tab Styles */
+.tab-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tab-button {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    background: #e9ecef;
+    color: #495057;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.tab-button:hover {
+    background: #dee2e6;
+    transform: translateY(-2px);
+}
+
+.tab-button.active {
+    background: #007bff;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Form Styles */
+.form-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-card h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 250px;
+}
+
+.form-group.full-width {
+    flex: none;
+    width: 100%;
+}
+
+.form-group label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #555;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e8f0fe;
+    border-radius: 12px;
+    font-size: 1rem;
+    background-color: #f8faff;
+    transition: all 0.3s ease;
+    color: #333;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Button Styles */
+.create-btn,
+.save-btn,
+.update-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    background: #28a745;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.create-btn:hover,
+.save-btn:hover,
+.update-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+}
+
+.delete-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    background: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+/* Search Styles */
+.search-section {
+    margin-bottom: 30px;
+}
+
+.search-input-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.search-input-group input {
+    flex: 1;
+    min-width: 200px;
+    font-family: 'Poppins', sans-serif;
+    padding: 16px 20px;
+    border: 2px solid #e8f0fe;
+    border-radius: 12px;
+    font-size: 1rem;
+    background-color: #f8faff;
+    transition: all 0.3s ease;
+    color: #333;
+}
+
+.search-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* List Styles */
+.user-list,
+.requests-list,
+.payments-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.user-item,
+.request-item,
+.payment-item {
+    font-family: 'Poppins', sans-serif;
+    padding: 15px;
+    border: 1px solid #e1e5e9;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.user-item:hover,
+.request-item:hover,
+.payment-item:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    font-family: 'Poppins', sans-serif;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #333;
+}
+
+/* Calendar Styles */
+.calendar-container {
+    font-family: 'Poppins', sans-serif;
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-header h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 10px;
+}
+
+.calendar-nav button {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.calendar-nav button:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.calendar-day {
+    font-family: 'Poppins', sans-serif;
+    aspect-ratio: 1;
+    border: 2px solid #e8f0fe;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: linear-gradient(135deg, #f8faff 0%, #e8f0fe 100%);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    font-weight: 500;
+    color: #333;
+}
+
+.calendar-day:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+    border-color: #007bff;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+    z-index: 2;
+}
+
+.calendar-day.other-month {
+    color: #b0b0b0;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    border-color: #e0e0e0;
+}
+
+.calendar-day.today {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    font-weight: 600;
+    border-color: #0056b3;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.calendar-day.has-class {
+    background: linear-gradient(135deg, #e7f3ff 0%, #d1e7ff 100%);
+    border-color: #007bff;
+    position: relative;
+}
+
+.calendar-day.has-class::after {
+    content: "📅";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.calendar-day.has-exam {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-color: #ffc107;
+}
+
+.calendar-day.has-exam::after {
+    content: "✏️";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.calendar-day.has-graduation {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-color: #28a745;
+}
+
+.calendar-day.has-graduation::after {
+    content: "🎓";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.calendar-day.has-event {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border-color: #dc3545;
+}
+
+.calendar-day.has-event::after {
+    content: "🎉";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.calendar-day.has-homework {
+    background: linear-gradient(135deg, #e2e3e5 0%, #d6d8db 100%);
+    border-color: #6c757d;
+}
+
+.calendar-day.has-homework::after {
+    content: "📚";
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.calendar-day-number {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.calendar-day-content {
+    font-size: 0.8rem;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Notification Styles */
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e1e5e9;
+}
+
+.notification-item {
+    font-family: 'Poppins', sans-serif;
+    padding: 15px;
+    border: 1px solid #e1e5e9;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.notification-item.unread {
+    background: #e7f3ff;
+    border-left: 4px solid #007bff;
+}
+
+.notification-item.read {
+    background: white;
+    opacity: 0.7;
+}
+
+/* Status Badges */
+.status-badge {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-confirmed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-canceled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-paid {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-overdue {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .welcome-heading h1 {
+        font-size: 1.8rem;
+        line-height: 1.3;
+    }
+    
+    .login-section {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .login-icon {
+        order: -1;
+    }
+    
+    .login-icon svg {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .inspiration-message {
+        margin-top: 30px;
+    }
+    
+    .inspiration-message p {
+        font-size: 1rem;
+        padding: 12px 16px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .form-group {
+        min-width: auto;
+    }
+    
+    .tab-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .tab-button {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .calendar-grid {
+        gap: 4px;
+    }
+    
+    .calendar-day {
+        padding: 6px;
+        font-size: 0.8rem;
+        min-height: 50px;
+    }
+    
+    .calendar-day-number {
+        font-size: 1rem;
+    }
+    
+    .calendar-day-content {
+        font-size: 0.7rem;
+    }
+    
+    .calendar-day::after {
+        font-size: 10px;
+        top: 2px;
+        right: 2px;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+/* Loading States */
+.loading {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+/* General Input Styles */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+textarea,
+select {
+    font-family: 'Poppins', sans-serif;
+    padding: 16px 20px;
+    border: 2px solid #e8f0fe;
+    border-radius: 12px;
+    font-size: 1rem;
+    background-color: #f8faff;
+    transition: all 0.3s ease;
+    color: #333;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Focus States for Accessibility */
+button:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+    .tab-buttons,
+    .modal,
+    .loading {
+        display: none !important;
+    }
+    
+    .tab-content {
+        display: block !important;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}

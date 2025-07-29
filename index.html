@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow English - English Learning Platform</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#007bff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Flow English">
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="Flow English - Professional English learning platform with personalized classes, expert teachers, and comprehensive learning tools.">
+    <meta name="keywords" content="English learning, online classes, language education, Flow English">
+    <meta name="author" content="Flow English">
+    
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="Flow English - English Learning Platform">
+    <meta property="og:description" content="Professional English learning platform with personalized classes and expert teachers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://flowenglish.com">
+    
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #007bff;
+        }
+
+        .login-btn {
+            background: #007bff;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary {
+            background: #28a745;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-primary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 1rem 2rem;
+            border: 2px solid white;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-secondary:hover {
+            background: white;
+            color: #007bff;
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* User Types Section */
+        .user-types {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .user-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .user-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .user-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .user-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-btn {
+            background: #007bff;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .user-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 3rem 0 1rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #007bff;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            line-height: 1.6;
+        }
+
+        .footer-section a:hover {
+            color: #007bff;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #555;
+            padding-top: 1rem;
+            color: #999;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .header-content {
+                justify-content: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">Flow English</a>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <a href="/login.html" class="login-btn">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Master English with Flow</h1>
+            <p>Professional English learning platform with personalized classes, expert teachers, and comprehensive tools to accelerate your language journey.</p>
+            <div class="cta-buttons">
+                <a href="/login.html" class="cta-primary">Start Learning</a>
+                <a href="#features" class="cta-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Flow English?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍🏫</div>
+                    <h3>Expert Teachers</h3>
+                    <p>Learn from certified English teachers with years of experience in language education.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>Flexible Scheduling</h3>
+                    <p>Book classes at your convenience with our easy-to-use scheduling system.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your learning progress with detailed analytics and performance reports.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <h3>Online Platform</h3>
+                    <p>Access your classes and materials from anywhere with our web-based platform.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Personalized Learning</h3>
+                    <p>Customized learning plans tailored to your goals and current level.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Learn on the go with our responsive design that works on all devices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Types Section -->
+    <section class="user-types" id="about">
+        <div class="container">
+            <h2 class="section-title">Join Our Community</h2>
+            <div class="user-types-grid">
+                <div class="user-card">
+                    <div class="user-icon">👨‍🎓</div>
+                    <h3>Students</h3>
+                    <p>Access your personalized learning dashboard, book classes, track progress, and manage your English learning journey.</p>
+                    <a href="/login.html" class="user-btn">Student Login</a>
+                </div>
+                <div class="user-card">
+                    <div class="user-icon">👨‍🏫</div>
+                    <h3>Teachers</h3>
+                    <p>Manage your classes, view student progress, update schedules, and access teaching resources.</p>
+                    <a href="/login.html" class="user-btn">Teacher Login</a>
+                </div>
+                <div class="user-card">
+                    <div class="user-icon">⚙️</div>
+                    <h3>Administrators</h3>
+                    <p>Oversee the platform, manage users, handle payments, and ensure smooth operations.</p>
+                    <a href="/login.html" class="user-btn">Admin Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Flow English</h4>
+                    <p>Professional English learning platform designed to help students achieve their language goals with expert teachers and comprehensive tools.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <p><a href="/login.html">Login</a></p>
+                    <p><a href="#features">Features</a></p>
+                    <p><a href="#about">About</a></p>
+                    <p><a href="#contact">Contact</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p>📧 info@flowenglish.com</p>
+                    <p>📞 +1 (555) 123-4567</p>
+                    <p>📍 Jerusalem, Israel</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <p><a href="#">Facebook</a></p>
+                    <p><a href="#">Twitter</a></p>
+                    <p><a href="#">Instagram</a></p>
+                    <p><a href="#">LinkedIn</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Flow English. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Service Worker Registration -->
+    <script src="sw-register.js"></script>
+    
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Show loading screen when navigating
+        document.querySelectorAll('a[href*=".html"]').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('loading').style.display = 'flex';
+            });
+        });
+
+        // Hide loading screen when page loads
+        window.addEventListener('load', function() {
+            document.getElementById('loading').style.display = 'none';
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Add animation to feature cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card, .user-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Check if user is already logged in
+        function checkAuthStatus() {
+            // Check if there's a stored auth token or user session
+            const isLoggedIn = localStorage.getItem('userToken') || sessionStorage.getItem('userSession');
+            
+            if (isLoggedIn) {
+                // Redirect to appropriate dashboard based on user role
+                const userRole = localStorage.getItem('userRole') || sessionStorage.getItem('userRole');
+                
+                switch(userRole) {
+                    case 'student':
+                        window.location.href = '/student.html';
+                        break;
+                    case 'teacher':
+                        window.location.href = '/teacher.html';
+                        break;
+                    case 'admin':
+                        window.location.href = '/admin.html';
+                        break;
+                    default:
+                        // If role is not clear, go to login
+                        window.location.href = '/login.html';
+                }
+            }
+        }
+
+        // Check auth status when page loads
+        document.addEventListener('DOMContentLoaded', checkAuthStatus);
+    </script>
+</body>
+</html>

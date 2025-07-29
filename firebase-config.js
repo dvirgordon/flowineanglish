@@ -1,24 +1,15 @@
-// Import Firebase v9 modular SDK
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
-// Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCxesJQTysh-4b7FlbMui4aoepG04Z2aDY",
+  authDomain: "flow-in-eanglish.firebaseapp.com",
+  projectId: "flow-in-eanglish",
+  storageBucket: "flow-in-eanglish.appspot.com", // ✅ FIXED
+  messagingSenderId: "936622998158",
+  appId: "1:936622998158:web:f496a1d03d671c61c67fdf",
+  measurementId: "G-GXFGMEPRVB"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase Auth and Firestore
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// Export the instances
-export { auth, db };
+const analytics = getAnalytics(app);

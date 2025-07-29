@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Flow English</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#007bff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Flow English">
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .welcome-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-section h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .welcome-section p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .calendar-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .nav-btn:hover {
+            background: #0056b3;
+        }
+        
+        .current-month {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #ddd;
+            border: 1px solid #ddd;
+        }
+        
+        .calendar-day-header {
+            background: #f8f9fa;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .calendar-day {
+            background: white;
+            padding: 10px;
+            min-height: 80px;
+            border: 1px solid #f0f0f0;
+            position: relative;
+        }
+        
+        .calendar-day.other-month {
+            background: #f8f9fa;
+            color: #ccc;
+        }
+        
+        .calendar-day.today {
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+        
+        .day-number {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .class-item {
+            background: #17a2b8;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-bottom: 2px;
+            cursor: pointer;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .class-item:hover {
+            background: #138496;
+        }
+        
+        .class-details {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .class-details h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .class-details p {
+            margin: 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .class-details .notes {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 3px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .no-classes {
+            color: #666;
+            font-style: italic;
+            font-size: 12px;
+        }
+        
+        /* Notifications Styles */
+        .notifications-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .notifications-header h3 {
+            color: #333;
+            margin: 0;
+        }
+        
+        .view-notifications-btn {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .view-notifications-btn:hover {
+            background: #0056b3;
+        }
+        
+        .recent-notifications {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .notification-item {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .notification-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .notification-item.unread {
+            background: #e3f2fd;
+            border-left: 4px solid #007bff;
+        }
+        
+        .notification-item.read {
+            opacity: 0.7;
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        
+        .notification-type {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .notification-time {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .notification-message {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .no-notifications {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .class-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cancel-btn {
+            background: #dc3545;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .cancel-btn:hover {
+            background: #c82333;
+        }
+        
+        .cancel-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+            <div class="dashboard-container">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1>Welcome, Teacher!</h1>
+                <p>View your upcoming classes and manage your schedule.</p>
+            </div>
+            
+            <!-- Notifications Section -->
+            <div class="notifications-section">
+                <div class="notifications-header">
+                    <h3>Recent Notifications</h3>
+                    <button id="viewAllNotificationsBtn" class="view-notifications-btn">View All</button>
+                </div>
+                <div id="recentNotifications" class="recent-notifications">
+                    <!-- Recent notifications will be loaded here -->
+                </div>
+            </div>
+        
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number" id="totalClasses">0</div>
+                <div class="stat-label">Total Classes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="thisMonth">0</div>
+                <div class="stat-label">This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="nextWeek">0</div>
+                <div class="stat-label">Next Week</div>
+            </div>
+        </div>
+        
+        <!-- Calendar Section -->
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <div class="calendar-nav">
+                    <button class="nav-btn" id="prevMonth">← Previous</button>
+                    <button class="nav-btn" id="nextMonth">Next →</button>
+                </div>
+                <div class="current-month" id="currentMonth"></div>
+            </div>
+            
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Worker Registration -->
+    <script src="sw-register.js"></script>
+    
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+        import { collection, query, where, getDocs, getDoc, doc, updateDoc, setDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+
+        let currentUser = null;
+        let currentDate = new Date();
+        let teacherClasses = [];
+        let teacherNotifications = [];
+
+        // Check authentication
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                initializeTeacherDashboard();
+            } else {
+                // Redirect to login if not authenticated
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Initialize dashboard
+        async function initializeTeacherDashboard() {
+            const prevBtn = document.getElementById('prevMonth');
+            const nextBtn = document.getElementById('nextMonth');
+            
+            prevBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
+            
+            await loadTeacherClasses();
+            await loadTeacherNotifications();
+            updateStats();
+            renderCalendar();
+            displayRecentNotifications();
+        }
+
+        // Load teacher's classes
+        async function loadTeacherClasses() {
+            try {
+                const classesRef = collection(db, 'classes');
+                const classesQuery = query(classesRef, where('teacherId', '==', currentUser.uid));
+                const classesSnapshot = await getDocs(classesQuery);
+
+                teacherClasses = [];
+                for (const classDoc of classesSnapshot.docs) {
+                    const classData = classDoc.data();
+                    
+                    // Get student name
+                    let studentName = 'Unknown Student';
+                    try {
+                        const studentDoc = await getDoc(doc(db, 'users', classData.studentId));
+                        if (studentDoc.exists()) {
+                            studentName = studentDoc.data().username;
+                        }
+                    } catch (error) {
+                        console.error('Error fetching student name:', error);
+                    }
+
+                    teacherClasses.push({
+                        id: classDoc.id,
+                        ...classData,
+                        studentName: studentName
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error loading teacher classes:', error);
+                alert('Error loading classes. Please try again.');
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalClasses = teacherClasses.length;
+            const thisMonth = getClassesForCurrentMonth().length;
+            const nextWeek = getClassesForNextWeek().length;
+
+            document.getElementById('totalClasses').textContent = totalClasses;
+            document.getElementById('thisMonth').textContent = thisMonth;
+            document.getElementById('nextWeek').textContent = nextWeek;
+        }
+
+        function getClassesForCurrentMonth() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            return teacherClasses.filter(classItem => {
+                const classDate = new Date(classItem.date);
+                return classDate.getMonth() === currentMonth && classDate.getFullYear() === currentYear;
+            });
+        }
+
+        function getClassesForNextWeek() {
+            const now = new Date();
+            const nextWeek = new Date(now);
+            nextWeek.setDate(now.getDate() + 7);
+            
+            return teacherClasses.filter(classItem => {
+                const classDate = new Date(classItem.date);
+                return classDate >= now && classDate <= nextWeek;
+            });
+        }
+
+        // Render calendar
+        function renderCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const currentMonthElement = document.getElementById('currentMonth');
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Update month display
+            const monthNames = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            currentMonthElement.textContent = `${monthNames[month]} ${year}`;
+            
+            // Clear calendar
+            calendarGrid.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            startDate.setDate(startDate.getDate() - firstDay.getDay());
+            
+            const today = new Date();
+            
+            // Generate calendar days
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                // Check if it's current month
+                if (date.getMonth() !== month) {
+                    dayElement.classList.add('other-month');
+                }
+                
+                // Check if it's today
+                if (date.toDateString() === today.toDateString()) {
+                    dayElement.classList.add('today');
+                }
+                
+                // Add day number
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = date.getDate();
+                dayElement.appendChild(dayNumber);
+                
+                // Add classes for this day
+                const dayClasses = getClassesForDate(date);
+                if (dayClasses.length > 0) {
+                    dayClasses.forEach(classItem => {
+                        const classContainer = document.createElement('div');
+                        classContainer.className = 'class-container';
+                        
+                        const classElement = document.createElement('div');
+                        classElement.className = 'class-item';
+                        classElement.textContent = `${classItem.time} - ${classItem.studentName}`;
+                        classElement.title = `${classItem.studentName} - ${classItem.location} - ${classItem.notes || 'No notes'}`;
+                        classElement.addEventListener('click', () => showClassDetails(classItem));
+                        
+                        // Only show cancel button for confirmed classes
+                        if (classItem.status === 'confirmed') {
+                            const cancelBtn = document.createElement('button');
+                            cancelBtn.className = 'cancel-btn';
+                            cancelBtn.textContent = 'Cancel';
+                            cancelBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                cancelClass(classItem);
+                            });
+                            
+                            const actionsDiv = document.createElement('div');
+                            actionsDiv.className = 'class-actions';
+                            actionsDiv.appendChild(cancelBtn);
+                            classContainer.appendChild(actionsDiv);
+                        }
+                        
+                        classContainer.appendChild(classElement);
+                        dayElement.appendChild(classContainer);
+                    });
+                } else if (date.getMonth() === month) {
+                    const noClasses = document.createElement('div');
+                    noClasses.className = 'no-classes';
+                    noClasses.textContent = 'No classes';
+                    dayElement.appendChild(noClasses);
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        function getClassesForDate(date) {
+            const dateString = date.toISOString().split('T')[0];
+            return teacherClasses.filter(classItem => classItem.date === dateString);
+        }
+
+        function showClassDetails(classItem) {
+            alert('Class Details:\n\n' + 
+                  `Student: ${classItem.studentName}\n` +
+                  `Date: ${new Date(classItem.date).toLocaleDateString()}\n` +
+                  `Time: ${classItem.time}\n` +
+                  `Location: ${classItem.location}\n` +
+                  `Status: ${classItem.status}\n` +
+                  (classItem.notes ? `Notes: ${classItem.notes}` : ''));
+        }
+
+        // Load teacher notifications
+        async function loadTeacherNotifications() {
+            try {
+                const notificationsRef = collection(db, 'notifications');
+                const notificationsQuery = query(notificationsRef, where('recipientId', '==', currentUser.uid));
+                const notificationsSnapshot = await getDocs(notificationsQuery);
+
+                teacherNotifications = [];
+                notificationsSnapshot.forEach(doc => {
+                    teacherNotifications.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                // Sort by timestamp (newest first)
+                teacherNotifications.sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());
+
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+
+        // Display recent notifications
+        function displayRecentNotifications() {
+            const recentNotifications = document.getElementById('recentNotifications');
+            
+            // Show only the 5 most recent notifications
+            const recent = teacherNotifications.slice(0, 5);
+            
+            if (recent.length === 0) {
+                recentNotifications.innerHTML = '<div class="no-notifications">No notifications yet.</div>';
+                return;
+            }
+
+            recentNotifications.innerHTML = '';
+            recent.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = `notification-item ${notification.read ? 'read' : 'unread'}`;
+                
+                const timeAgo = getTimeAgo(notification.timestamp.toDate());
+                
+                notificationItem.innerHTML = `
+                    <div class="notification-header">
+                        <div class="notification-type">${getNotificationTypeLabel(notification.type)}</div>
+                        <div class="notification-time">${timeAgo}</div>
+                    </div>
+                    <div class="notification-message">${notification.message}</div>
+                `;
+                
+                // Mark as read when clicked
+                notificationItem.addEventListener('click', () => {
+                    if (!notification.read) {
+                        markNotificationRead(notification.id);
+                    }
+                });
+                
+                recentNotifications.appendChild(notificationItem);
+            });
+        }
+
+        // Get time ago
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
+            
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        }
+
+        // Get notification type label
+        function getNotificationTypeLabel(type) {
+            const labels = {
+                'request_created': 'New Request',
+                'request_updated': 'Request Updated',
+                'request_confirmed': 'Request Confirmed',
+                'request_declined': 'Request Declined',
+                'class_created': 'Class Created',
+                'class_canceled': 'Class Canceled',
+                'class_updated': 'Class Updated',
+                'class_assigned': 'Class Assigned'
+            };
+            return labels[type] || type;
+        }
+
+        // Mark notification as read
+        async function markNotificationRead(notificationId) {
+            try {
+                const notificationRef = doc(db, 'notifications', notificationId);
+                await updateDoc(notificationRef, { read: true });
+
+                // Update local data
+                const notificationIndex = teacherNotifications.findIndex(n => n.id === notificationId);
+                if (notificationIndex !== -1) {
+                    teacherNotifications[notificationIndex].read = true;
+                }
+
+                displayRecentNotifications();
+
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+            }
+        }
+
+        // View all notifications button
+        document.getElementById('viewAllNotificationsBtn').addEventListener('click', () => {
+            // For now, just show an alert with all notifications
+            let allNotificationsText = 'All Notifications:\n\n';
+            teacherNotifications.forEach(notification => {
+                const timeAgo = getTimeAgo(notification.timestamp.toDate());
+                allNotificationsText += `${getNotificationTypeLabel(notification.type)} - ${timeAgo}\n`;
+                allNotificationsText += `${notification.message}\n\n`;
+            });
+            alert(allNotificationsText);
+        });
+
+        // Cancel class function
+        async function cancelClass(classItem) {
+            const confirmed = confirm(`Are you sure you want to cancel your class with ${classItem.studentName} on ${new Date(classItem.date).toLocaleDateString()} at ${classItem.time}?`);
+            
+            if (!confirmed) return;
+
+            try {
+                // Update class status to canceled
+                const classRef = doc(db, 'classes', classItem.id);
+                await updateDoc(classRef, {
+                    status: 'canceled',
+                    canceledAt: new Date(),
+                    canceledBy: currentUser.uid
+                });
+
+                // Create notifications
+                await createNotification('admin', 'class_canceled', `Class canceled by teacher: ${new Date(classItem.date).toLocaleDateString()} at ${classItem.time} with ${classItem.studentName}.`);
+                await createNotification(classItem.studentId, 'class_canceled', `Your class on ${new Date(classItem.date).toLocaleDateString()} at ${classItem.time} has been canceled by your teacher.`);
+
+                // Update local data
+                const classIndex = teacherClasses.findIndex(c => c.id === classItem.id);
+                if (classIndex !== -1) {
+                    teacherClasses[classIndex].status = 'canceled';
+                }
+
+                // Refresh display
+                updateStats();
+                renderCalendar();
+                
+                alert('Class canceled successfully!');
+
+            } catch (error) {
+                console.error('Error canceling class:', error);
+                alert('Error canceling class. Please try again.');
+            }
+        }
+
+        // Create notification function
+        async function createNotification(recipientId, type, message, data = {}) {
+            try {
+                const notificationData = {
+                    recipientId: recipientId,
+                    type: type,
+                    message: message,
+                    timestamp: new Date(),
+                    read: false,
+                    ...data
+                };
+
+                const notificationId = `notification_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                await setDoc(doc(db, 'notifications', notificationId), notificationData);
+            } catch (error) {
+                console.error('Error creating notification:', error);
+            }
+        }
+    </script>
+</body>
+</html>

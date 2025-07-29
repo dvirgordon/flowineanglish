@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Flow English</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#007bff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Flow English">
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-card">
+            <h1>Welcome to Flow English</h1>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Service Worker Registration -->
+    <script src="sw-register.js"></script>
+    
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+        import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            // Check for admin login
+            if (username === 'Tamar' && password === '1983') {
+                window.location.href = 'admin.html';
+                return;
+            }
+
+            try {
+                // Convert username to email
+                const email = username + '@flow.com';
+                
+                // Sign in with Firebase Auth
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Fetch user role from Firestore
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    const role = userData.role;
+
+                    // Redirect based on role
+                    if (role === 'student') {
+                        window.location.href = 'student.html';
+                    } else if (role === 'teacher') {
+                        window.location.href = 'teacher.html';
+                    } else {
+                        alert('Invalid user role. Please contact administrator.');
+                    }
+                } else {
+                    alert('User data not found. Please contact administrator.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed. Please check your credentials and try again.');
+            }
+        });
+    </script>
+</body>
+</html> 

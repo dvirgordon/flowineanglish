@@ -1,0 +1,10 @@
+{
+  "sendgrid": {
+    "key": "YOUR_SENDGRID_API_KEY_HERE",
+    "from_email": "noreply@yourdomain.com"
+  },
+  "app": {
+    "dashboard_url": "https://your-app-url.com/student.html",
+    "secret_key": "YOUR_SECRET_KEY_FOR_MANUAL_TRIGGER"
+  }
+} 

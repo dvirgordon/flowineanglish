@@ -55,6 +55,11 @@
       </form>
     </div>
 
+    <!-- Signup Link -->
+    <div class="signup-link">
+      <p>Don't have an account? <a href="signup.html" class="modern-link">Sign up here! ✨</a></p>
+    </div>
+
     <!-- Inspiration Message -->
     <div class="inspiration-message">
       <p class="inspiration-text">🌍 Learning English opens the world. You've got this! 💪</p>
@@ -141,5 +146,35 @@
       }, 1500);
     });
   </script>
+
+  <style>
+    /* Additional styles for login page */
+    .signup-link {
+      text-align: center;
+      margin: 30px 0;
+      animation: fadeInUp 1s ease-out 1.2s both;
+    }
+
+    .signup-link p {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    }
+
+    .modern-link {
+      color: #4facfe;
+      text-decoration: none;
+      font-weight: 700;
+      transition: var(--transition-bounce);
+      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    }
+
+    .modern-link:hover {
+      color: #00f2fe;
+      transform: scale(1.1);
+      text-shadow: 0 0 20px rgba(79, 172, 254, 0.8);
+    }
+  </style>
 </body>
 </html>
